@@ -96,8 +96,10 @@ def get_last_5_entries_sales():
     for ind in range(1, 7):
         column = sales.col_values(ind)
         columns.append(column[-5:])
-
+    
     return columns
+
+get_last_5_entries_sales()
 
 def calculate_stock_data(data):
     '''
@@ -111,7 +113,23 @@ def calculate_stock_data(data):
         average = sum(int_column) / len(int_column)
         stock_num = average * 1.1
         new_stock_data.append(round(stock_num))
-    return new_stock_data
+    get_stock_values(new_stock_data)
+
+def get_stock_values(data):
+    '''
+    Get headings from worlsheets and pair average row of data to it
+    '''
+    stock = SHEET.worksheet("stock").get_all_values()
+    stock_row = stock[0]
+    stock_values = stock[-1]
+    headings = {}
+    print("Make the following numbers of sandwiches for next market:")
+
+    for stock_row, stock_values in zip(stock_row, stock_values):
+        headings[stock_row] = stock_values
+    
+    print(headings)
+
 
 def main():
     """
@@ -125,6 +143,6 @@ def main():
     sales_columns = get_last_5_entries_sales()
     stock_data = calculate_stock_data(sales_columns)
     update_worksheet(stock_data, "stock")
-
+    
 print("Welcome to Love Sandwiches Data Automation")
 main()
